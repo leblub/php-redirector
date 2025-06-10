@@ -1,12 +1,20 @@
 <?php
-session_start();
+// Datei: index.php
 
-if (!isset($_SESSION['last']) || $_SESSION['last'] === 'b') {
-    $_SESSION['last'] = 'a';
-    header("Location: https://twitch.tv");
-} else {
-    $_SESSION['last'] = 'b';
-    header("Location: https://youtube.com");
+$counter_file = 'counter.txt';
+
+// Wenn die Datei nicht existiert, initialisiere sie
+if (!file_exists($counter_file)) {
+    file_put_contents($counter_file, '0');
 }
-exit;
 
+// Zähler auslesen und erhöhen
+$counter = (int)file_get_contents($counter_file);
+$next = ($counter % 2 === 0) ? 'https://twitch.tv/dein-kanal' : 'https://youtube.com/dein-kanal';
+
+// Zähler hochzählen und speichern
+file_put_contents($counter_file, $counter + 1);
+
+// Weiterleitung
+header("Location: $next");
+exit;
